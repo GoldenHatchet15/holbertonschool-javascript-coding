@@ -15,7 +15,7 @@ request(apiUrl, { json: true }, (error, response, body) => {
 
   let count = 0;
   body.results.forEach(film => {
-    if (film.characters.includes(`https://swapi-api.hbtn.io/api/people/18/`)) {
+    if (film.characters.includes('https://swapi-api.hbtn.io/api/people/18/')) {
       count++;
     }
   });
