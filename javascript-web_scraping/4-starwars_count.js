@@ -12,7 +12,6 @@ axios.get(apiUrl)
       film.characters.forEach(character => {
         if (character.endsWith('/18/')) {
           count++;
-          return;
         }
       });
     });
