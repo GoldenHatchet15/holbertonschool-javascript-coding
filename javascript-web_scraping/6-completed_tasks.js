@@ -1,38 +1,35 @@
-#!/usr/bin/env node
-
+#!/usr/bin/node
 const request = require('request');
+
+if (process.argv.length < 3) {
+    console.error('Usage: ./6-completed_tasks.js <API URL>');
+    process.exit(1);
+}
+
 const apiUrl = process.argv[2];
 
-request(apiUrl, { json: true }, (error, response, todos) => {
-  if (error) {
-    console.error('Error:', error);
-    return;
-  }
-  
-  if (response.statusCode !== 200) {
-    console.error('Error:', response.statusCode);
-    return;
-  }
-
-  if (!todos || !Array.isArray(todos)) {
-    console.error('Invalid API response');
-    return;
-  }
-
-  const completedTasks = {};
-  todos.forEach(todo => {
-    if (todo.completed) {
-      if (completedTasks.hasOwnProperty(todo.userId)) {
-        completedTasks[todo.userId]++;
-      } else {
-        completedTasks[todo.userId] = 1;
-      }
+request(apiUrl, function (error, response, body) {
+    if (error) {
+        console.error(error);
+        return;
     }
-  });
-
-  for (const userId in completedTasks) {
-    if (completedTasks.hasOwnProperty(userId)) {
-      console.log(`'${userId}': ${completedTasks[userId]}`);
+    if (response.statusCode !== 200) {
+        console.error('Failed to get data from the API');
+        return;
     }
-  }
+
+    const todos = JSON.parse(body);
+    const completedTasks = {};
+
+    todos.forEach(function (todo) {
+        if (todo.completed) {
+            if (completedTasks[todo.userId]) {
+                completedTasks[todo.userId] += 1;
+            } else {
+                completedTasks[todo.userId] = 1;
+            }
+        }
+    });
+
+    console.log(completedTasks);
 });
