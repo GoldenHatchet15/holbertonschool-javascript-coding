@@ -1,24 +1,24 @@
 #!/usr/bin/node
 
-const request = require('request');
+const axios = require('axios');
 const apiUrl = process.argv[2];
 
-request(apiUrl, { json: true }, (error, response, body) => {
-  if (error) {
+axios.get(apiUrl)
+  .then(response => {
+    const films = response.data.results;
+    let count = 0;
+
+    films.forEach(film => {
+      film.characters.forEach(character => {
+        if (character.endsWith('/18/')) {
+          count++;
+          return;
+        }
+      });
+    });
+
+    console.log(count);
+  })
+  .catch(error => {
     console.error('Error:', error);
-    return;
-  }
-  if (response.statusCode !== 200) {
-    console.log('Failed to get response:', response.statusCode);
-    return;
-  }
-
-  let count = 0;
-  body.results.forEach(film => {
-    if (film.characters.includes('https://swapi-api.hbtn.io/api/people/18/')) {
-      count++;
-    }
   });
-
-  console.log(count);
-});
