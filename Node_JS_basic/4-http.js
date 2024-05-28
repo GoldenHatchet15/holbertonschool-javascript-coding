@@ -2,6 +2,9 @@
 
 const http = require('http');
 
+const PORT = 1245;
+const ALTERNATE_PORT = 1246;
+
 // Create HTTP server
 const app = http.createServer((req, res) => {
   // Set response headers
@@ -11,10 +14,24 @@ const app = http.createServer((req, res) => {
   res.end('Hello Holberton School!\n');
 });
 
-// Listen on port 1245
-const PORT = 1245;
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
-});
+// Function to start the server
+function startServer(port) {
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}/`);
+  }).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${port} is already in use.`);
+      if (port === PORT) {
+        console.log(`Trying to use alternate port ${ALTERNATE_PORT}...`);
+        startServer(ALTERNATE_PORT);
+      }
+    } else {
+      console.error(`Failed to start server: ${err.message}`);
+    }
+  });
+}
+
+// Start the server on the primary port
+startServer(PORT);
 
 module.exports = app;
