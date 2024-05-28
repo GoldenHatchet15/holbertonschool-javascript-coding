@@ -1,21 +1,21 @@
-// Display the welcome message
-console.log('Welcome to Holberton School, what is your name?');
+const readline = require('readline');
 
-// Set the encoding for the standard input to UTF-8
-process.stdin.setEncoding('utf8');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-// Listen for data input from the user
-process.stdin.once('data', (data) => {
-  // Trim the input to remove any extraneous whitespace
-  const name = data.trim();
-  
+// Display the welcome message and prompt for user's name
+rl.question('Welcome to Holberton School, what is your name?\n', (name) => {
   // Display the user's name
   console.log(`Your name is: ${name}`);
   
-  // Display the closing message
+  // Close the readline interface
+  rl.close();
+});
+
+// Event listener for when the readline interface is closed
+rl.on('close', () => {
   console.log('This important software is now closing');
-  
-  // End the process
-  process.stdin.end();
-  process.exit();
+  process.exit(0);
 });
