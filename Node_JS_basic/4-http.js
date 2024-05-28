@@ -4,6 +4,8 @@ const http = require('http');
 
 // Create HTTP server
 const app = http.createServer((req, res) => {
+  console.log(`Received request for ${req.url}`);
+  
   // Set response headers
   res.writeHead(200, { 'Content-Type': 'text/plain' });
 
