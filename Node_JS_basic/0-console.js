@@ -1,9 +1,7 @@
-/**
- * Prints a message to the standard output.
- * @param {string} message - The message to be printed.
- */
-function displayMessage(message) {
+// Define the displayMessage function using ES6 syntax
+const displayMessage = (message) => {
   console.log(message);
-}
+};
 
+// Export the displayMessage function
 module.exports = displayMessage;
