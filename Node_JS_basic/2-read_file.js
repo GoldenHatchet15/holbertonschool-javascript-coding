@@ -13,8 +13,8 @@ function countStudents(path) {
     // Initialize counters for each field
     let CSCount = 0;
     let SWECount = 0;
-    let csList = [];
-    let sweList = [];
+    const csList = [];
+    const sweList = [];
 
     // Skip the header row (first row)
     for (let i = 1; i < rows.length; i++) {
