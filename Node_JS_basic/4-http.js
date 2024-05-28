@@ -11,10 +11,19 @@ const app = http.createServer((req, res) => {
   res.end('Hello Holberton School!\n');
 });
 
-// Listen on port 1245 or the port defined in the environment variable (for flexibility)
-const PORT = process.env.PORT || 1245;
+// Listen on port 1245
+const PORT = 1245;
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}/`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Shutting down server...');
+  app.close(() => {
+    console.log('Server closed.');
+    process.exit(0);
+  });
 });
 
 // Export the app
