@@ -2,60 +2,68 @@
 
 const http = require('http');
 const fs = require('fs');
-const path = require('path');
+const url = require('url');
 
-// Function to count students from the CSV file
-function countStudents(databasePath) {
-  return new Promise((resolve, reject) => {
-    fs.readFile(databasePath, 'utf8', (err, data) => {
-      if (err) {
-        reject(new Error('Cannot load the database'));
-        return;
-      }
-      const lines = data.trim().split('\n');
-      const header = lines.shift(); // Remove the header line
-      const students = lines.filter(line => line.trim() !== '');
-      
-      const csStudents = students.filter(student => student.includes('CS')).map(student => student.split(',')[0]);
-      const sweStudents = students.filter(student => student.includes('SWE')).map(student => student.split(',')[0]);
-
-      const result = [
-        `This is the list of our students`,
-        `Number of students: ${students.length}`,
-        `Number of students in CS: ${csStudents.length}. List: ${csStudents.join(', ')}`,
-        `Number of students in SWE: ${sweStudents.length}. List: ${sweStudents.join(', ')}`
-      ].join('\n');
-
-      resolve(result);
-    });
-  });
-}
-
-// Create HTTP server
 const app = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  const parsedUrl = url.parse(req.url, true);
 
-  if (req.url === '/') {
+  if (parsedUrl.pathname === '/') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
     res.end('Hello Holberton School!');
-  } else if (req.url === '/students') {
-    const databasePath = path.join(__dirname, process.argv[2]);
+  } else if (parsedUrl.pathname === '/students') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.write('This is the list of our students\n');
 
-    countStudents(databasePath)
-      .then(result => {
-        res.end(result);
+    const dbFile = process.argv[2];
+    countStudents(dbFile)
+      .then((message) => {
+        res.end(message);
       })
-      .catch(error => {
-        res.end(error.message);
+      .catch((err) => {
+        res.end(err.message);
       });
   } else {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('Not Found');
   }
 });
 
-// Listen on port 1245
 app.listen(1245, () => {
   console.log('Server running at http://localhost:1245/');
 });
 
-// Export the app
 module.exports = app;
+
+function countStudents(path) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (error, data) => {
+      if (error) {
+        reject(new Error('Cannot load the database'));
+      } else {
+        const rows = data.trim().split('\n').filter((row) => row.trim() !== '');
+
+        const students = rows.slice(1);
+        const totalStudents = students.length;
+
+        const csStudents = [];
+        const sweStudents = [];
+
+        students.forEach((student) => {
+          const [firstName, , , field] = student.split(',');
+
+          if (field.trim() === 'CS') {
+            csStudents.push(firstName);
+          } else if (field.trim() === 'SWE') {
+            sweStudents.push(firstName);
+          }
+        });
+
+        let message = `Number of students: ${totalStudents}\n`;
+        message += `Number of students in CS: ${csStudents.length}. List: ${csStudents.join(', ')}\n`;
+        message += `Number of students in SWE: ${sweStudents.length}. List: ${sweStudents.join(', ')}`;
+
+        resolve(message);
+      }
+    });
+  });
+}
