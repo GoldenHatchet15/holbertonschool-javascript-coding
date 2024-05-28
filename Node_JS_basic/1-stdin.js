@@ -1,24 +1,21 @@
 // Display the welcome message
-console.log("Welcome to Holberton School, what is your name?");
+console.log('Welcome to Holberton School, what is your name?');
 
-// Use process.stdin to read user input
-process.stdin.on('data', (data) => {
-  const name = data.toString().trim(); // Trim any extra whitespace
+// Set the encoding for the standard input to UTF-8
+process.stdin.setEncoding('utf8');
 
+// Listen for data input from the user
+process.stdin.once('data', (data) => {
+  // Trim the input to remove any extraneous whitespace
+  const name = data.trim();
+  
   // Display the user's name
   console.log(`Your name is: ${name}`);
-
-  // End the input process and display the closing message
+  
+  // Display the closing message
+  console.log('This important software is now closing');
+  
+  // End the process
   process.stdin.end();
-});
-
-// Display the closing message when the input ends
-process.stdin.on('end', () => {
-  console.log("This important software is now closing");
-});
-
-// Handle the process ending by user interruption
-process.on('SIGINT', () => {
-  console.log("\nThis important software is now closing");
   process.exit();
 });
