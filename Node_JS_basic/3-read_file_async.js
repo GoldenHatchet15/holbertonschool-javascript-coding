@@ -1,5 +1,3 @@
-// 3-read_file_async.js
-
 const fs = require('fs');
 
 function countStudents(path) {
@@ -15,8 +13,10 @@ function countStudents(path) {
         const sweList = [];
 
         for (let i = 1; i < rows.length; i++) {
-          const row = rows[i];
-          const [firstName, lastName, age, field] = row.split(',');
+          const row = rows[i].trim();
+          if (!row) continue;
+
+          const [firstName, , , field] = row.split(',');
 
           if (field.trim() === 'CS') {
             CSCount++;

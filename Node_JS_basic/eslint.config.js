@@ -1,8 +1,7 @@
 import { FlatCompat } from '@eslint/eslintrc';
 
-// Use FlatCompat to support ESLint v8+ config in ESLint v7
 const compat = new FlatCompat({
-  baseDirectory: __dirname, // if applicable
+  baseDirectory: __dirname, // This should be the root of your project
 });
 
 export default [
