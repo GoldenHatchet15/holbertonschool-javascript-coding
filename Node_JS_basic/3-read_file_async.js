@@ -1,32 +1,42 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 
 function countStudents(path) {
-  return fs.readFile(path, 'utf8')
-    .then((data) => {
-      const lines = data.split('\n');
-      const students = lines.filter((line) => line).map((line) => line.split(','));
+  return new Promise((resolve, reject) => {
+    fs.readFile(path, 'utf8', (error, data) => {
+      if (error) {
+        reject(new Error('Cannot load the database'));
+      } else {
+        const rows = data.trim().split('\n');
+        let CSCount = 0;
+        let SWECount = 0;
+        const csList = [];
+        const sweList = [];
 
-      const num_students = students.length ? students.length - 1 : 0;
-      console.log(`Number of students: ${num_students}`);
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i].trim();
+          if (!row) {
+            continue;
+          }
 
-      const fields = {};
-      for (const student of students) {
-        const field = student[3];
-        if (!fields[field]) {
-          fields[field] = [];
+          const [firstName, , , field] = row.split(',');
+
+          if (field.trim() === 'CS') {
+            CSCount += 1;
+            csList.push(firstName);
+          } else if (field.trim() === 'SWE') {
+            SWECount += 1;
+            sweList.push(firstName);
+          }
         }
-        fields[field].push(student[0]);
-      }
 
-        delete fields.field;
+        console.log(`Number of students: ${CSCount + SWECount}`);
+        console.log(`Number of students in CS: ${CSCount}. List: ${csList.join(', ')}`);
+        console.log(`Number of students in SWE: ${SWECount}. List: ${sweList.join(', ')}`);
 
-      for (const field in fields) {
-        console.log(`Number of students in ${field}: ${fields[field].length}. List: ${fields[field].join(', ')}`);
+        resolve();
       }
-    })
-    .catch(() => {
-      throw new Error('Cannot load the database');
     });
+  });
 }
 
 module.exports = countStudents;
