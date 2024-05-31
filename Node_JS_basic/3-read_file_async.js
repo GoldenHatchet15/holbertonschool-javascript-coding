@@ -14,15 +14,17 @@ function countStudents(path) {
 
         for (let i = 1; i < rows.length; i++) {
           const row = rows[i].trim();
-          if (!row) continue;
+          if (!row) {
+            continue;
+          }
 
           const [firstName, , , field] = row.split(',');
 
           if (field.trim() === 'CS') {
-            CSCount++;
+            CSCount += 1;
             csList.push(firstName);
           } else if (field.trim() === 'SWE') {
-            SWECount++;
+            SWECount += 1;
             sweList.push(firstName);
           }
         }
