@@ -1,15 +1,13 @@
-#!/usr/bin/node
-
 process.stdout.write('Welcome to Holberton School, what is your name?\n');
 
-process.stdin.on('data', (data) => {
-  const name = data.toString().trim();
-  process.stdout.write(`Your name is: ${name}\n`);
-  process.stdout.write('This important software is now closing\n');
-  process.exit();
+process.stdin.on('readable', () => {
+  const chunk = process.stdin.read();
+
+  if (chunk) {
+    process.stdout.write(`Your name is: ${chunk}`);
+  }
 });
 
-process.on('SIGINT', () => {
-  process.stdout.write('\nThis important software is now closing\n');
-  process.exit();
+process.stdin.on('end', () => {
+  process.stdout.write('This important software is now closing\n');
 });
