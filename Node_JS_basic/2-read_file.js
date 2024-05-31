@@ -8,13 +8,9 @@ function countStudents(path) {
     let SWECount = 0;
     const csList = [];
     const sweList = [];
-    
     for (let i = 1; i < rows.length; i++) {
-      const row = rows[i].trim(); // Trim the row
-      if (!row) continue; // Skip empty lines
-      
-      const [, firstName, , field] = row.split(','); // Destructure directly
-      
+      const row = rows[i];
+      const [firstName, , , field] = row.split(',');
       if (field.trim() === 'CS') {
         CSCount++;
         csList.push(firstName);
@@ -23,7 +19,6 @@ function countStudents(path) {
         sweList.push(firstName);
       }
     }
-    
     console.log(`Number of students: ${CSCount + SWECount}`);
     console.log(`Number of students in CS: ${CSCount}. List: ${csList.join(', ')}`);
     console.log(`Number of students in SWE: ${SWECount}. List: ${sweList.join(', ')}`);
