@@ -9,21 +9,25 @@ function countStudents(path) {
     const csList = [];
     const sweList = [];
     for (let i = 1; i < rows.length; i++) {
-      const row = rows[i];
-      const [firstName, , , field] = row.split(',');
-      if (field.trim() === 'CS') {
-        CSCount++;
-        csList.push(firstName);
-      } else if (field.trim() === 'SWE') {
-        SWECount++;
-        sweList.push(firstName);
+      const row = rows[i].trim();
+      if (row) {
+        const [firstName, , , field] = row.split(',');
+        if (field.trim() === 'CS') {
+          CSCount++;
+          csList.push(firstName);
+        } else if (field.trim() === 'SWE') {
+          SWECount++;
+          sweList.push(firstName);
+        }
       }
     }
     console.log(`Number of students: ${CSCount + SWECount}`);
     console.log(`Number of students in CS: ${CSCount}. List: ${csList.join(', ')}`);
     console.log(`Number of students in SWE: ${SWECount}. List: ${sweList.join(', ')}`);
   } catch (error) {
-    throw new Error('Cannot load the database');
+    console.error('Cannot load the database');
+    throw error;
   }
 }
+
 module.exports = countStudents;
