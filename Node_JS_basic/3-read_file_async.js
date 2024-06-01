@@ -20,10 +20,10 @@ function countStudents(path) {
 
           const [firstName, , , field] = row.split(',');
 
-          if (field.trim() === 'CS') {
+          if (field && field.trim() === 'CS') {
             CSCount += 1;
             csList.push(firstName);
-          } else if (field.trim() === 'SWE') {
+          } else if (field && field.trim() === 'SWE') {
             SWECount += 1;
             sweList.push(firstName);
           }
