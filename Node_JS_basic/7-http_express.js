@@ -1,5 +1,3 @@
-// 7-http_express.js
-
 const express = require('express');
 const fs = require('fs');
 const app = express();
